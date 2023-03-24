@@ -8,15 +8,23 @@
             data.push(notes.value)
         }
      )
-     localStorage.setItem("notes",JSON.stringify(data))
+     if(data.length===0){
+        localStorage.removeItem("notes")
+     }
+     else{
+        localStorage.setItem("notes",JSON.stringify(data))
+     }
+    
  }
+ 
  btn.addEventListener(
     "click",
     function(){
         addNotes()
     }
  )
- const addNotes=()=>{
+
+ const addNotes=(text = "")=>{
     const notes=document.createElement("div")
     notes.classList.add("notes")
     notes.innerHTML=`
@@ -25,7 +33,7 @@
         <i class="trash fa-solid fa-trash"></i>
         <i class="save fa-solid fa-floppy-disk"></i>
     </div>
-    <textarea>  </textarea>
+    <textarea>${text}  </textarea>
  
     `;
     notes.querySelector(".trash").addEventListener(
@@ -45,3 +53,20 @@
     saveNotes()
 
  }
+ (
+    function(){
+        const lsnotes=JSON.parse(localStorage.getItem("notes"))
+        if(lsnotes===null){
+            addNotes()
+        }
+        else{
+            lsnotes.forEach(
+                (lsnotes)=>{
+                    addNotes(lsnotes)
+                }
+            )
+        }
+      
+       
+    }
+ )()
